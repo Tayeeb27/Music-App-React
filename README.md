@@ -19,7 +19,7 @@ This is a simple React web application that allows you to showcase my favorite a
 1. Clone this repository to your local machine:
 
    ```bash
-   git clone <repository_url>
+   git clone https://github.com/Tayeeb27/Music-App-React.git
 2. Navigate to the project directory:
     ```bash
    cd music-app
