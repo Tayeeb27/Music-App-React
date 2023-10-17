@@ -46,11 +46,11 @@ export default function App() {
   useEffect(() => {
     const artistName = artists[selectedArtist - 1].name;
     const deezerAPIEndpoint = `https://api.deezer.com/search/track?q=${artistName}&order=ranking&limit=5`;
-  
+
     const script = document.createElement('script');
     script.src = `${deezerAPIEndpoint}&output=jsonp&callback=handleDeezerResponse`;
     document.head.appendChild(script);
-  
+
     // Define a callback function to handle the Deezer API response
     window.handleDeezerResponse = (response) => {
       // Process the response and set the songs state
@@ -58,13 +58,27 @@ export default function App() {
       // Clean up the script tag
       document.head.removeChild(script);
     };
-  
+
     return () => {
       // Clean up the callback function
       delete window.handleDeezerResponse;
     };
   }, [selectedArtist, artists]);
-  
+
+  // Background color changing interval
+  useEffect(() => {
+    const backgroundColors = ['#FF5733', '#33FF57', '#5733FF', '#FFFF33', '#33FFFF'];
+    let currentIndex = 0;
+
+    const intervalId = setInterval(() => {
+      document.body.style.backgroundColor = backgroundColors[currentIndex];
+      currentIndex = (currentIndex + 1) % backgroundColors.length;
+    }, 3000); // Change every 30 seconds
+
+    return () => {
+      clearInterval(intervalId); // Clear the interval on component unmount
+    };
+  }, []);
 
   return (
     <>
