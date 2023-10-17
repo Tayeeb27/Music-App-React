@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
-import ArtistInfo from './components/ArtistInfo';
-import SongList from './components/SongList';
-import AddSongForm from './components/AddSongForm';
-import ArtistDropdown from './components/ArtistDropdown';
+import{ArtistInfo, SongList, AddSongForm, ArtistDropdown} from './components';
 import './App.css';
 
-function App() {
+export default function App() {
   const [likedSongs, setLikedSongs] = useState([]);
   const [artists, setArtists] = useState([
     {
@@ -110,4 +107,3 @@ function App() {
   );
 }
 
-export default App;
