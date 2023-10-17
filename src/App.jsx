@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import{ArtistInfo, SongList, AddSongForm, ArtistDropdown} from './components';
+import React, { useState, useEffect } from 'react';
+import { ArtistInfo, SongList, AddSongForm, ArtistDropdown } from './components';
 import './App.css';
 
 export default function App() {
@@ -12,64 +12,20 @@ export default function App() {
       introduction: 'The GOAT',
     },
     {
-        id: 2,
-        name: 'WeWantWraiths',
-        musicType: 'Rap',
-        introduction: 'The GOAT',
+      id: 2,
+      name: 'WeWantWraiths',
+      musicType: 'Rap',
+      introduction: 'The GOAT',
     },
     {
-        id: 3,
-        name: 'Nafe Smallz',
-        musicType: 'Rap',
-        introduction: 'The GOAT',
+      id: 3,
+      name: 'Nafe Smallz',
+      musicType: 'Rap',
+      introduction: 'The GOAT',
     },
   ]);
 
-  const [songs, setSongs] = useState([
-    {
-        id: 1,
-        artistId: 1,
-        name: 'Muse',
-        releaseDate: '2023-01-01',
-        coverArt: 'https://images.genius.com/8cd98b9c35b2d2e9109861a88f873634.1000x1000x1.png',
-    },
-    {
-        id: 2,
-        artistId: 1,
-        name: 'Stop Calling',
-        releaseDate: '2023-02-15',
-        coverArt: 'https://images.genius.com/8cd98b9c35b2d2e9109861a88f873634.1000x1000x1.png',
-    },
-    {
-        id: 3,
-        artistId: 2,
-        name: 'Freezing Summer',
-        releaseDate: '2023-02-15',
-        coverArt: 'https://grmdaily.com/wp-content/uploads/2022/09/wewantwraithsheartbrokechild.jpeg',
-    },
-    {
-        id: 4,
-        artistId: 2,
-        name: 'Chanaynay',
-        releaseDate: '2023-02-15',
-        coverArt: 'https://m.media-amazon.com/images/I/51a0bjwWn+L._UXNaN_FMjpg_QL85_.jpg',
-    },
-    {
-        id: 5,
-        artistId: 3,
-        name: 'Picky',
-        releaseDate: '2023-02-15',
-        coverArt: 'https://img.tmstor.es/nafesmallz/116563-83bfb60c898e8b53ac1d8f20dc7744cf.png',
-    },
-    {
-        id: 6,
-        artistId: 3,
-        name: 'Rock Climbing',
-        releaseDate: '2023-02-15',
-        coverArt: 'https://img.tmstor.es/nafesmallz/116563-83bfb60c898e8b53ac1d8f20dc7744cf.png',
-    },
-  ]);
-
+  const [songs, setSongs] = useState([]);
   const [selectedArtist, setSelectedArtist] = useState(1);
 
   const handleLikeToggle = (songId) => {
@@ -86,6 +42,28 @@ export default function App() {
       { id: prevSongs.length + 1, artistId: selectedArtist, ...song },
     ]);
   };
+
+  useEffect(() => {
+    const artistName = artists[selectedArtist - 1].name;
+    const deezerAPIEndpoint = `https://api.deezer.com/search/track?q=${artistName}&order=ranking&limit=5`;
+  
+    const script = document.createElement('script');
+    script.src = `${deezerAPIEndpoint}&output=jsonp&callback=handleDeezerResponse`;
+    document.head.appendChild(script);
+  
+    // Define a callback function to handle the Deezer API response
+    window.handleDeezerResponse = (response) => {
+      // Process the response and set the songs state
+      setSongs(response.data);
+      // Clean up the script tag
+      document.head.removeChild(script);
+    };
+  
+    return () => {
+      // Clean up the callback function
+      delete window.handleDeezerResponse;
+    };
+  }, [selectedArtist, artists]);
   
 
   return (
@@ -98,7 +76,7 @@ export default function App() {
       />
       <ArtistInfo artist={artists.find((artist) => artist.id === selectedArtist)} />
       <SongList
-        songs={songs.filter((song) => song.artistId === selectedArtist)}
+        songs={songs}
         likedSongs={likedSongs}
         onLikeToggle={handleLikeToggle}
       />
@@ -106,4 +84,3 @@ export default function App() {
     </>
   );
 }
-

@@ -6,8 +6,8 @@ const SongList = ({ songs, likedSongs, onLikeToggle }) => {
     <ul>
       {songs.map((song) => (
         <li key={song.id}>
-          <img src={song.coverArt} alt={song.name} />
-          <span>{song.name} ({song.releaseDate})</span>
+          <img src={song.artist.picture_small} alt={song.title} />
+          <span>{song.title} ({song.album.title})</span>
           {likedSongs.includes(song.id) ? (
             <RiThumbUpFill onClick={() => onLikeToggle(song.id)} />
           ) : (
